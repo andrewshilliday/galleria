@@ -7,7 +7,6 @@
  */
 
 (function() {
-    
     var G = window.Galleria; 
     if (typeof G == 'undefined') {
 	return;
@@ -23,26 +22,26 @@
 	    max: 40,
 	    size: 'big',
 	};
-	this._call({
-	    method: 'smugmug.login.anonymously',
-	    APIKey: APIKey
-	}, function (data) {
-	    this.SessionID = data.Login.Session.id;
-	})
     }
     
     S.prototype = {
-	getAlbum: function(AlbumID, AlbumKey) {
+        getAlbum: function(AlbumID, AlbumKey) 
+	{
 	    this._set(arguments);
-	    this._find({
-		method: 'smugmug.images.get',
-		AlbumID: AlbumID,
-		AlbumKey: AlbumKey,
-		Heavy: 'TRUE'
-	    });
+	    this._call({method: 'smugmug.login.anonymously',
+			APIKey: this.APIKey},
+		function (data) 
+                {
+		    this._find({method: 'smugmug.images.get',
+				SessionID: data.Login.Session.id,
+				AlbumID: AlbumID,
+				AlbumKey: AlbumKey,
+				Heavy: 'TRUE'});
+		});
 	},
-	
-	_set: function(args) {
+	    
+	_set: function(args) 
+	{
 	    args = Array.prototype.slice.call(args);
 	    this.callback = args[3] || args[2] || args[1];
 	    if (typeof args[1] == 'object') {
@@ -73,9 +72,7 @@
 	},
 	
 	_find: function(params) {
-	    params = jQuery.extend({
-		method: 'smugmug.images.get',
-	    }, params);
+	    params = jQuery.extend({method: 'smugmug.images.get'}, params);
 	    
 	    return this._call(params, function(data) {
 		var obj = { length: 0 };

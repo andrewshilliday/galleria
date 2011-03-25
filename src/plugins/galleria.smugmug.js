@@ -28,9 +28,9 @@
         getAlbum: function(AlbumID, AlbumKey) 
 	{
 	    this._set(arguments);
-	    this._call({APIKey: this.APIKey,
+	    this._find({APIKey: this.APIKey,
 			AlbumID: AlbumID,
-			AlbumKey: AlbumKey},
+			AlbumKey: AlbumKey});
 	},
 	    
 	_set: function(args) 

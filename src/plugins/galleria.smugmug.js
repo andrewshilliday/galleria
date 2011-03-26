@@ -67,7 +67,7 @@
 
 	    return this._call(params, function(data) {
 		var obj = { length: 0 };
-		var photos = data.Images;
+		var photos = data.Album.Images;
 		var len = Math.min(this.options.max, photos.length);
 		
 		for (var i=0; i<len; i++) {

@@ -1,5 +1,5 @@
 /*!
- * Galleria SmugMug Plugin v 1.0
+ * Galleria SmugMug Plugin v 1.1
  * http://galleria.aino.se
  *
  * Copyright 2010, AndrewShilliday
@@ -28,16 +28,9 @@
         getAlbum: function(AlbumID, AlbumKey) 
 	{
 	    this._set(arguments);
-	    this._call({method: 'smugmug.login.anonymously',
-			APIKey: this.APIKey},
-		function (data) 
-                {
-		    this._find({method: 'smugmug.images.get',
-				SessionID: data.Login.Session.id,
-				AlbumID: AlbumID,
-				AlbumKey: AlbumKey,
-				Heavy: 'TRUE'});
-		});
+	    this._find({APIKey: this.APIKey,
+			AlbumID: AlbumID,
+			AlbumKey: AlbumKey});
 	},
 	    
 	_set: function(args) 
@@ -51,12 +44,9 @@
 	},
 	
 	_call: function(params, callback) {
-	    var url = 'http://api.smugmug.com/hack/json/1.2.0/?';
+	    var url = 'http://api.smugmug.com/services/api/json/1.3.0/?';
 	    var scope = this;
-	    if (this.SessionID) {
-		params = jQuery.extend({SessionID: this.SessionID}, params);
-	    } 
-	    params=jQuery.extend({JSONCallback: '?'}, params);
+	    params=jQuery.extend({Callback: '?'}, params);
 	    
 	    jQuery.each(params, function(key, value) {
 		url += '&'+ key + '=' +value;
@@ -73,10 +63,11 @@
 	
 	_find: function(params) {
 	    params = jQuery.extend({method: 'smugmug.images.get'}, params);
-	    
+	    params = jQuery.extend({Extras: 'Caption,ThumbURL,SmallURL,MediumURL,LargeURL,OrignalURL'}, params);
+
 	    return this._call(params, function(data) {
 		var obj = { length: 0 };
-		var photos = data.Images;
+		var photos = data.Album.Images;
 		var len = Math.min(this.options.max, photos.length);
 		
 		for (var i=0; i<len; i++) {
